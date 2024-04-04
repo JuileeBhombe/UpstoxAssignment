@@ -1,4 +1,4 @@
-package com.juileebhombe.upstoxassignment
+package com.juileebhombe.upstoxassignment.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

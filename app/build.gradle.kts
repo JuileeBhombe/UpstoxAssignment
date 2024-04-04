@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.daggerHiltAndroid)
     kotlin("kapt")
+    kotlin("plugin.serialization") version libs.versions.kotlin
 
 }
 
@@ -62,12 +63,16 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.rutime.livedata)
+    implementation(libs.jetbrains.kotlinx.serialization.json)
 
     //Dagger Hilt
     implementation(libs.com.google.dagger.android)
-    implementation(libs.androidx.navigation.compose)
     kapt(libs.com.google.dagger.compiler)
     kapt(libs.androidx.hilt.compiler)
+
+    //Navigation
+    implementation(libs.androidx.hilt.nvigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
