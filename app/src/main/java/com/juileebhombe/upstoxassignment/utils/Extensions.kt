@@ -1,14 +1,10 @@
 package com.juileebhombe.upstoxassignment.utils
 
-import com.juileebhombe.upstoxassignment.data.model.UserHolding
 import java.text.DecimalFormat
 
-fun UserHolding.calculateTotalPNL(): Double? {
-    return quantity?.let { ltp?.times(it) }
-}
 
-fun Double.isNegative(): Boolean {
-    return if (this < 0) true else false
+fun String.isNegative(): Boolean {
+    return this.startsWith("-")
 }
 
 fun Double.formatCost(): String {

@@ -3,6 +3,7 @@ package com.juileebhombe.upstoxassignment.di.module
 import com.juileebhombe.upstoxassignment.data.api.NetworkService
 import com.juileebhombe.upstoxassignment.data.model.Error
 import com.juileebhombe.upstoxassignment.data.model.HoldingsDataModel
+import com.juileebhombe.upstoxassignment.ui.holdings.utils.HoldingsHelper
 import com.juileebhombe.upstoxassignment.utils.AppConstants
 import dagger.Module
 import dagger.Provides
@@ -27,7 +28,7 @@ class ApplicationModule {
         return object : NetworkService {
             override suspend fun getHoldings(): HoldingsDataModel {
                 return withContext(Dispatchers.IO) {
-                    val url = URL(AppConstants.URL)
+                    val url = URL(AppConstants.ENDPOINT)
                     val httpURLConnection = url.openConnection() as HttpURLConnection
 
                     try {
@@ -54,5 +55,10 @@ class ApplicationModule {
                 }
             }
         }
+    }
+
+    @Provides
+    fun provideHelper(): HoldingsHelper {
+        return HoldingsHelper()
     }
 }

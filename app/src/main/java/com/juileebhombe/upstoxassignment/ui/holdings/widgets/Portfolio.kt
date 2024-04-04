@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.KeyboardArrowDown
-import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -24,12 +21,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.juileebhombe.upstoxassignment.ui.holdings.HoldingsViewModel
+import com.juileebhombe.upstoxassignment.utils.AppConstants
+import com.juileebhombe.upstoxassignment.utils.isNegative
 
 @Composable
 fun Portfolio(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
-
+    val viewmodel: HoldingsViewModel = viewModel()
 
     Card(shape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
         modifier = modifier
@@ -42,23 +44,35 @@ fun Portfolio(modifier: Modifier = Modifier) {
                 visible = expanded, modifier = Modifier.animateContentSize()
             ) {
                 Column {
-                    PortfolioItem("Current Value*", "some value")
-                    PortfolioItem("Total Investment*", "some value")
-                    PortfolioItem("Today's Profit & Loss*", "some value")
+                    viewmodel.calculateCurrentValue()
+                        ?.let { PortfolioItem(AppConstants.CURRENT_VALUE, it) }
+                    viewmodel.calculateTotalInvestment()?.let {
+                        PortfolioItem(
+                            AppConstants.TOTAL_INVESTMENT, it
+                        )
+                    }
+                    viewmodel.calculateTodaySPNL()?.let {
+                        PortfolioItem(
+                            AppConstants.TODAY_S_PROFIT_N_LOSS,
+                            it,
+                            if (it.isNegative()) Color.Red else Color.Green
+                        )
+                    }
                 }
             }
             HorizontalDivider()
-            PortfolioItem(
-                "Profit & Loss*",
-                "some value"
-            ) {
-                if (expanded) Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowDown,
-                    contentDescription = "Portfolio Closed"
-                ) else Icon(
-                    imageVector = Icons.Outlined.KeyboardArrowUp,
-                    contentDescription = "Portfolio Opened"
-                )
+            viewmodel.calculateTotalPNL()?.let {
+                PortfolioItem(
+                    AppConstants.PROFIT_N_LOSS, it, if (it.isNegative()) Color.Red else Color.Green
+                ) {
+                    if (expanded) Icon(
+                        imageVector = AppConstants.EXPANDED_ICON,
+                        contentDescription = AppConstants.EXPANDED_ICON_DESCRIPTION
+                    ) else Icon(
+                        imageVector = AppConstants.COLLAPSED_ICON,
+                        contentDescription = AppConstants.COLLAPSED_ICON_DESCRIPTION
+                    )
+                }
             }
 
         }
@@ -67,7 +81,12 @@ fun Portfolio(modifier: Modifier = Modifier) {
 
 
 @Composable
-fun PortfolioItem(key: String, value: String, icon: @Composable (() -> Unit)? = null) {
+fun PortfolioItem(
+    key: String,
+    value: String,
+    valueColor: Color? = null,
+    icon: @Composable (() -> Unit)? = null,
+) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -79,6 +98,6 @@ fun PortfolioItem(key: String, value: String, icon: @Composable (() -> Unit)? = 
             Text(text = key)
             icon?.let { it() }
         }
-        Text(text = value)
+        Text(text = value, color = valueColor ?: Color.Black)
     }
 }

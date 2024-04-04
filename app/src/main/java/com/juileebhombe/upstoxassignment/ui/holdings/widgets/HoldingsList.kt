@@ -20,15 +20,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juileebhombe.upstoxassignment.data.model.HoldingsDataModel
 import com.juileebhombe.upstoxassignment.data.model.UserHolding
-import com.juileebhombe.upstoxassignment.utils.calculateTotalPNL
+import com.juileebhombe.upstoxassignment.ui.holdings.HoldingsViewModel
+import com.juileebhombe.upstoxassignment.utils.AppConstants
 import com.juileebhombe.upstoxassignment.utils.formatCost
 import com.juileebhombe.upstoxassignment.utils.isNegative
 import kotlin.random.Random
 
 @Composable
-fun HoldingList(data: HoldingsDataModel, modifier: Modifier = Modifier) {
+fun HoldingList(
+    data: HoldingsDataModel,
+    modifier: Modifier = Modifier,
+) {
     LazyColumn(modifier) {
         data.userHolding?.forEachIndexed { index, it ->
             item {
@@ -48,13 +53,15 @@ fun HoldingList(data: HoldingsDataModel, modifier: Modifier = Modifier) {
 fun UserHoldingItem(
     data: UserHolding,
 ) {
+    val viewmodel: HoldingsViewModel = viewModel()
+
     Column(Modifier.padding(12.dp)) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 data.symbol?.let { Text(text = it.uppercase(), fontWeight = FontWeight.SemiBold) }
                 if (Random.nextBoolean()) {
                     Text(
-                        text = "T1 Holding",
+                        text = AppConstants.HOLDING_TAG,
                         color = Color.DarkGray,
                         fontSize = 8.sp,
                         modifier = Modifier
@@ -63,13 +70,11 @@ fun UserHoldingItem(
                                 Color.LightGray
                             )
                             .padding(horizontal = 2.dp, vertical = 0.dp)
-
-
                     )
                 }
             }
             data.ltp?.let {
-                UserHoldingItemValue(key = "LTP", value = it.formatCost())
+                UserHoldingItemValue(key = AppConstants.LTP, value = it.formatCost())
             }
         }
         Row(
@@ -79,12 +84,12 @@ fun UserHoldingItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             data.quantity?.let {
-                UserHoldingItemValue(key = "NET QTY", value = it.toString())
+                UserHoldingItemValue(key = AppConstants.NET_QTY, value = it.toString())
             }
-            data.calculateTotalPNL()?.let {
+            viewmodel.calculateTotalPNL(data).let {
                 UserHoldingItemValue(
-                    key = "P&L",
-                    value = it.formatCost(),
+                    key = AppConstants.PNL,
+                    value = it,
                     valueColor = if (it.isNegative()) Color.Red else Color.Green
                 )
             }
