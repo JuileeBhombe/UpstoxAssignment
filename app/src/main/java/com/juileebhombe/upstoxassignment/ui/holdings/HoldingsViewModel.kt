@@ -24,13 +24,20 @@ class HoldingsViewModel @Inject constructor(private val repository: HoldingsRepo
     val uiState: LiveData<HoldingsDataModel?>
         get() = _uiState
 
+    private val _isLoading: MutableLiveData<Boolean> by lazy {
+        MutableLiveData(true)
+    }
+    val isLoading: LiveData<Boolean>
+        get() = _isLoading
 
     fun fetchHoldings() {
+        _isLoading.value = true
         viewModelScope.launch {
             val data = repository.getHoldings()
 
             withContext(Dispatchers.Main) {
                 _uiState.value = data
+                _isLoading.value = false
             }
         }
     }

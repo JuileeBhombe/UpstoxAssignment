@@ -13,7 +13,7 @@ data class HoldingsDataModel(
 data class UserHolding(
     val symbol: String? = null,
     val quantity: Int? = null,
-    val ltp: Float? = null,
-    val avgPrice: Float? = null,
-    val close: Float? = null,
+    val ltp: Double? = null,
+    val avgPrice: Double? = null,
+    val close: Double? = null,
 )
