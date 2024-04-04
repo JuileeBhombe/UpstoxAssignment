@@ -21,8 +21,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.juileebhombe.upstoxassignment.data.model.HoldingsDataModel
-import com.juileebhombe.upstoxassignment.data.model.UserHolding
+import com.juileebhombe.upstoxassignment.data.local.entity.Holding
 import com.juileebhombe.upstoxassignment.ui.holdings.HoldingsViewModel
 import com.juileebhombe.upstoxassignment.utils.AppConstants
 import com.juileebhombe.upstoxassignment.utils.formatCost
@@ -31,16 +30,14 @@ import kotlin.random.Random
 
 @Composable
 fun HoldingList(
-    data: HoldingsDataModel,
+    data: List<Holding>,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier) {
-        data.userHolding?.forEachIndexed { index, it ->
+        data.forEachIndexed { index, it ->
             item {
-                if (it != null) {
-                    UserHoldingItem(data = it)
-                }
-                if (index < (data.userHolding.lastIndex)) {
+                UserHoldingItem(data = it)
+                if (index < (data.lastIndex)) {
                     HorizontalDivider(Modifier.fillMaxWidth())
                 }
             }
@@ -51,7 +48,7 @@ fun HoldingList(
 
 @Composable
 fun UserHoldingItem(
-    data: UserHolding,
+    data: Holding,
 ) {
     val viewmodel: HoldingsViewModel = viewModel()
 
@@ -63,7 +60,7 @@ fun UserHoldingItem(
                     Text(
                         text = AppConstants.HOLDING_TAG,
                         color = Color.DarkGray,
-                        fontSize = 8.sp,
+                        fontSize = 12.sp,
                         modifier = Modifier
                             .padding(start = 4.dp)
                             .background(
@@ -90,7 +87,7 @@ fun UserHoldingItem(
                 UserHoldingItemValue(
                     key = AppConstants.PNL,
                     value = it,
-                    valueColor = if (it.isNegative()) Color.Red else Color.Green
+                    valueColor = if (it.isNegative()) Color.Red else Color(0xFF006400)
                 )
             }
         }

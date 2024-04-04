@@ -12,3 +12,7 @@ fun Double.formatCost(): String {
     val formattedNumber = decimalFormat.format(this)
     return if (this >= 0) "\u20B9$formattedNumber" else "-\u20B9${formattedNumber.substring(1)}"
 }
+
+fun Double.formatPercentage(decimalPlaces: Int): String {
+    return String.format("%.${decimalPlaces}f", this) + "%"
+}

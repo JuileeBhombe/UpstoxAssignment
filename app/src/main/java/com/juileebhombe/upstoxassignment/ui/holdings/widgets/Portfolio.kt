@@ -22,7 +22,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.juileebhombe.upstoxassignment.ui.holdings.HoldingsViewModel
 import com.juileebhombe.upstoxassignment.utils.AppConstants
@@ -55,7 +60,7 @@ fun Portfolio(modifier: Modifier = Modifier) {
                         PortfolioItem(
                             AppConstants.TODAY_S_PROFIT_N_LOSS,
                             it,
-                            if (it.isNegative()) Color.Red else Color.Green
+                            valueColor = if (it.isNegative()) Color.Red else Color(0xFF006400)
                         )
                     }
                 }
@@ -63,7 +68,10 @@ fun Portfolio(modifier: Modifier = Modifier) {
             HorizontalDivider()
             viewmodel.calculateTotalPNL()?.let {
                 PortfolioItem(
-                    AppConstants.PROFIT_N_LOSS, it, if (it.isNegative()) Color.Red else Color.Green
+                    AppConstants.PROFIT_N_LOSS,
+                    it,
+                    " (${viewmodel.calculatePercentPNL()})",
+                    valueColor = if (it.isNegative()) Color.Red else Color(0xFF006400)
                 ) {
                     if (expanded) Icon(
                         imageVector = AppConstants.EXPANDED_ICON,
@@ -84,6 +92,7 @@ fun Portfolio(modifier: Modifier = Modifier) {
 fun PortfolioItem(
     key: String,
     value: String,
+    prefixValue: String? = null,
     valueColor: Color? = null,
     icon: @Composable (() -> Unit)? = null,
 ) {
@@ -98,6 +107,18 @@ fun PortfolioItem(
             Text(text = key)
             icon?.let { it() }
         }
-        Text(text = value, color = valueColor ?: Color.Black)
+        Text(buildAnnotatedString {
+            append(value)
+            prefixValue?.let{
+                withStyle(
+                    style = SpanStyle(
+                        fontSize = 12.sp,
+                        fontStyle = FontStyle.Italic
+                    )
+                ) {
+                    append(it)
+                }
+            }
+        }, color = valueColor ?: Color.Black)
     }
 }

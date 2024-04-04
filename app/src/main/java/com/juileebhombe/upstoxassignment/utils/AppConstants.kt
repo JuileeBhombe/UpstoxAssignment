@@ -21,6 +21,10 @@ object AppConstants {
     const val EXPANDED_ICON_DESCRIPTION = "Close Portfolio"
     const val COLLAPSED_ICON_DESCRIPTION = "Open Portfolio"
 
+    const val EMPTY_HOLDINGS = "Currently, there are no stock holdings."
+    const val ERROR = "Something went wrong. Please Try After Some Time"
+    const val NO_INTERNET = "Offline? Data might be old. Reconnect for updates."
+
     //ICONS
     val EXPANDED_ICON = Icons.Outlined.KeyboardArrowDown
     val COLLAPSED_ICON = Icons.Outlined.KeyboardArrowUp

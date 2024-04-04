@@ -1,11 +1,11 @@
 package com.juileebhombe.upstoxassignment.data.model
 
+import com.juileebhombe.upstoxassignment.data.local.entity.Holding
 import kotlinx.serialization.Serializable
 
 
 @Serializable
 data class HoldingsDataModel(
-    val error: Error? = null,
     val userHolding: List<UserHolding?>? = null,
 )
 
@@ -17,3 +17,14 @@ data class UserHolding(
     val avgPrice: Double? = null,
     val close: Double? = null,
 )
+
+
+fun UserHolding.toEntity(): Holding {
+    return Holding(
+        symbol = symbol,
+        quantity = quantity,
+        ltp = ltp,
+        avgPrice = avgPrice,
+        close = close
+    )
+}
